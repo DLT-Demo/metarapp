@@ -14,7 +14,7 @@ node(){
     commit_id=readFile('GIT_COMMIT')
     echo "COMMIT_ID ${commit_id}"
 
-    ensureMaven()
+    //ensureMaven()
     //sh 'mvn clean install'
     def mvnHome = tool 'M3'
     sh "${mvnHome}/bin/mvn clean install"
