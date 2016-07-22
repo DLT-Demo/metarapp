@@ -1,3 +1,5 @@
+#!groovy
+
 def commit_id
 
 stage 'Build and Publish'
@@ -26,20 +28,21 @@ node(){
         println it
     }
     
-    //Ensure branch is master
-    if (env.BRANCH_NAME.startsWith("master")) //Only publish to docker if on master branch
-    {
-     docker.withServer('unix:///var/run/docker.sock'){
-
+    //Ensure branch is master  $env.BRANCH_NAME
+    //if (env.BRANCH_NAME.startsWith("master")) //Only publish to docker if on master branch
+    //{
+     docker.withServer('unix:///var/run/docker.sock')
+     {
         def metarappImage = docker.build "hdharia/metarapp-jboss-app:${env.BUILD_NUMBER}"
 
         sh "docker -v"
         //use withDockerRegistry to make sure we are logged in to docker hub registry
-        withDockerRegistry(registry: [credentialsId: 'docker-hub-hdharia17']) {
+        withDockerRegistry(registry: [credentialsId: 'docker-hub-hdharia17']) 
+        {
           metarappImage.push()
         }
       }
-   }
+   //}
 }
 
 checkpoint "Build Complete"
