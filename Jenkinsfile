@@ -15,7 +15,9 @@ node(){
     echo "COMMIT_ID ${commit_id}"
 
     ensureMaven()
-    sh 'mvn clean install'
+    //sh 'mvn clean install'
+    def mvnHome = tool 'M3'
+    sh "${mvnHome}/bin/mvn clean install"
 
     step $class: 'hudson.tasks.junit.JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'
     echo "INFO - Ending build phase"
