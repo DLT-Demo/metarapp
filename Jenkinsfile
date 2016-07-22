@@ -8,9 +8,8 @@ node(){
     //use git checkout
     checkout scm
 
-
-	  sh('pwd')
-	  sh('git rev-parse HEAD > GIT_COMMIT')
+    sh('pwd')
+    sh('git rev-parse HEAD > GIT_COMMIT')
     commit_id=readFile('GIT_COMMIT')
     echo "COMMIT_ID ${commit_id}"
 
@@ -22,6 +21,12 @@ node(){
     step $class: 'hudson.tasks.junit.JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'
     echo "INFO - Ending build phase"
 
+    sh 'env > env.txt'
+    readFile('env.txt').split("\r?\n").each {
+        println it
+    }
+    
+    //Ensure branch is master
     if (env.BRANCH_NAME.startsWith("master")) //Only publish to docker if on master branch
     {
      docker.withServer('unix:///var/run/docker.sock'){
