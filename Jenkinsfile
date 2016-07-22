@@ -50,9 +50,10 @@ checkpoint "Build Complete"
 stage 'Dev Deploy via Ansible'
 node()
 {
-	echo "Launching Dev Server for ${commit_id}"
+   echo "Launching Dev Server for ${commit_id}"
 
-	//Ansible call to standup dev environment
+   //Ansible call to standup dev environment
+   sh "tower-cli config"
 
    //Call Ansible
    sh "tower-cli job launch --monitor --job-template=62 --extra-vars=\"commit_id=${commit_id}\" > JOB_OUTPUT"
