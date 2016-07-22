@@ -33,11 +33,11 @@ node(){
     //{
      docker.withServer('unix:///var/run/docker.sock')
      {
-        def metarappImage = docker.build "hdharia/metarapp-jboss-app:${env.BUILD_NUMBER}"
+        def metarappImage = docker.build "rjstewart/metarapp-jboss-app:${env.BUILD_NUMBER}"
 
         sh "docker -v"
         //use withDockerRegistry to make sure we are logged in to docker hub registry
-        withDockerRegistry(registry: [credentialsId: 'docker-hub-hdharia17']) 
+        withDockerRegistry(registry: [credentialsId: 'docker-hub-rjstewart']) 
         {
           metarappImage.push()
         }
