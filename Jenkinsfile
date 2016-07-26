@@ -47,15 +47,7 @@ node()
 {
    echo "Launching Dev Server for ${commit_id}"
 
-   //Ansible call to standup dev environment
-   //sh "tower-cli config"
-
-   //Call Ansible
-   sh "tower-cli job launch --monitor --job-template=62 --extra-vars=\"commit_id=${commit_id}\" > JOB_OUTPUT"
-
-   sh 'scripts/get-instance-ip.sh > IP'
-
-   def IP=readFile('IP')
+   def IP = '127.0.0.1'
    echo "Application Link: ${IP}:8080/metarapp/metars.html"
 
    stage "Verify Dev Deployment"
@@ -82,7 +74,7 @@ parallel(qualityAnalysis: {
     node(){
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
-        ensureMaven()
+        //ensureMaven()
         //sh 'mvn -o sonar:sonar'
         echo "INFO - Ending SONAR"
     }
@@ -103,7 +95,7 @@ node()
 	echo "Tear Down DEV"
 
     //Call Ansible
-   sh "tower-cli job launch --monitor --job-template=63 --extra-vars=\"commit_id=${commit_id}\""
+   //sh "tower-cli job launch --monitor --job-template=63 --extra-vars=\"commit_id=${commit_id}\""
 }
 
 checkpoint "QA analysis complete"
@@ -192,17 +184,17 @@ if (env.BRANCH_NAME.startsWith("master")) //Deploy to master only from master br
 	{
     echo "Deploying to Prod"
 
-   wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) {
+   // wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) {
 
-     sh "oc project harshal-project"
+   //  sh "oc project harshal-project"
      // Delete existing service:
-     sh "oc delete all -l app=metarapp-jboss-app"
+  //   sh "oc delete all -l app=metarapp-jboss-app"
      sleep 90
      //Hook into oepnshift deployment
-     sh "oc new-app hdharia/metarapp-jboss-app:${env.BUILD_NUMBER}"
-     sh "oc expose svc/metarapp-jboss-app --hostname=metarapp-jboss-app-harshal-project.ose.dlt-demo.com"
+  //   sh "oc new-app hdharia/metarapp-jboss-app:${env.BUILD_NUMBER}"
+  //   sh "oc expose svc/metarapp-jboss-app --hostname=metarapp-jboss-app-harshal-project.ose.dlt-demo.com"
 
-     echo "Verify Application Deployed to: http://metarapp-jboss-app-harshal-project.ose.dlt-demo.com/weather/metars.html"
+     echo "Verify Application Deployed to: http://metarapp-jboss-app-dlt-demo-project.ose.dlt-demo.com/weather/metars.html"
    }
 
    echo "Deployed to Prod"
