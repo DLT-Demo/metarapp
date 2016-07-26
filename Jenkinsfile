@@ -69,25 +69,30 @@ node()
 checkpoint "Deployed and Verified at Dev"
 
 stage name: 'Quality analysis and Perfs'
-parallel(qualityAnalysis: {
+parallel(qualityAnalysis: 
+{
 
-    node(){
+    node()
+    {
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
         //ensureMaven()
         //sh 'mvn -o sonar:sonar'
         echo "INFO - Ending SONAR"
     }
-}, performanceTest: {
+}, 
+performanceTest: 
+{
 
-    node(){
+    node()
+    {
         // DEPLOY ON PERFS AND RUN JMETER STRESS TEST
         echo "INFO - starting Perf Tests"
         //sh 'mvn -o jmeter:jmeter'
         echo "INFO - Ending Perf Tests"
     }
 }
-)
+)  //End QA
 
 stage 'Tear Down DEV'
 node()
@@ -116,9 +121,9 @@ timeout(time: 60, unit: 'SECONDS')
 stage 'QA Deploy via Ansible'
 node()
 {
-	echo "Deploying to QA"
+   echo "Deploying to QA"
 
- 	//Call Ansible
+   //Call Ansible
    //sh "tower-cli job launch --monitor --job-template=62 --extra-vars=\"commit_id=${commit_id}\" > JOB_OUTPUT"
 
    //sh 'scripts/get-instance-ip.sh > IP'
@@ -162,29 +167,27 @@ node()
     //sh "tower-cli job launch --monitor --job-template=63 --extra-vars=\"commit_id=${commit_id}\""
 }
 
-if (env.BRANCH_NAME.startsWith("master")) //Deploy to master only from master branch
+checkpoint "QA Testing complete, Ready for Prod Deployment"
+
+   stage 'Approval for Production Deploy'
+   timeout(time: 60, unit: 'SECONDS')
+   {
+      try
+      {
+	input message: "Deploy to Prod?"
+      }
+      catch(Exception e)
+      {
+        echo "No input provided, resuming build"
+      }
+   }
+
+stage 'Deploy to Production'
+node()
 {
- checkpoint "QA Testing complete, Ready for Prod Deployment"
-
-	stage 'Approval for Production Deploy'
-	timeout(time: 60, unit: 'SECONDS')
-	{
-    try
-    {
-	   input message: "Deploy to Prod?"
-  	}
-    catch(Exception e)
-    {
-       echo "No input provided, resuming build"
-    }
-  }
-
-	stage 'Deploy to Production'
-	node()
-	{
     echo "Deploying to Prod"
 
-   // wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) {
+   // wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) 
 
    //  sh "oc project harshal-project"
      // Delete existing service:
@@ -195,15 +198,6 @@ if (env.BRANCH_NAME.startsWith("master")) //Deploy to master only from master br
   //   sh "oc expose svc/metarapp-jboss-app --hostname=metarapp-jboss-app-harshal-project.ose.dlt-demo.com"
 
      echo "Verify Application Deployed to: http://metarapp-jboss-app-dlt-demo-project.ose.dlt-demo.com/weather/metars.html"
-   }
 
-   echo "Deployed to Prod"
-  }
-}
-
-/**
- * Deploy Maven on the slave if needed and add it to the path
- */
-def ensureMaven() {
-    env.PATH = "${tool 'mvn'}/bin:${env.PATH}"
+    echo "Deployed to Prod"
 }
