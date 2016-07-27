@@ -2,7 +2,6 @@
 
 def commit_id
 
-
 stage 'Build and Publish'
 node(){
 
