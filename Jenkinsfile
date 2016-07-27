@@ -77,6 +77,7 @@ parallel(qualityAnalysis:
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
         //ensureMaven()
+        sleep 10
         //sh 'mvn -o sonar:sonar'
         echo "INFO - Ending SONAR"
     }
@@ -88,6 +89,7 @@ performanceTest:
     {
         // DEPLOY ON PERFS AND RUN JMETER STRESS TEST
         echo "INFO - starting Perf Tests"
+        sleep 11
         //sh 'mvn -o jmeter:jmeter'
         echo "INFO - Ending Perf Tests"
     }
@@ -98,6 +100,8 @@ stage 'Tear Down DEV'
 node()
 {
 	echo "Tear Down DEV"
+	
+	sleep 5
 
     //Call Ansible
    //sh "tower-cli job launch --monitor --job-template=63 --extra-vars=\"commit_id=${commit_id}\""
@@ -111,6 +115,8 @@ timeout(time: 60, unit: 'SECONDS')
    try
    {
       input message: 'Deploy to QA?'
+      
+      sleep 20
    }
    catch(Exception e)
    {
@@ -127,6 +133,8 @@ node()
    //sh "tower-cli job launch --monitor --job-template=62 --extra-vars=\"commit_id=${commit_id}\" > JOB_OUTPUT"
 
    //sh 'scripts/get-instance-ip.sh > IP'
+   
+   sleep 20
 
    //def IP=readFile('IP')
    //echo "Application Link: ${IP}:8080/metarapp/metars.html"
