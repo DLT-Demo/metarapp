@@ -195,8 +195,18 @@ node()
 {
     echo "Deploying to Prod"
 
+    wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) {
 
-    echo "Verify Application Deployed to: http://metarapp-prod.ose.dlt-demo.com/metars_map.html"
+     sh "oc project prod"
+     // Delete existing service:
+     sh "oc delete all -l app=metarapp-jboss-app"
+     sleep 90
+     //Hook into oepnshift deployment
+     sh "oc new-app rjstewart/metarapp-jboss-app:${env.BUILD_NUMBER}"
+     sh "oc expose svc/metarapp-jboss-app --hostname=metarapp-jboss-app-prod.ose.dlt-demo.com"
+
+     echo "Verify Application Deployed to: http://metarapp-prod.ose.dlt-demo.com/metars_map.html"
+   }
   
     echo "Deployed to Prod"
 }
