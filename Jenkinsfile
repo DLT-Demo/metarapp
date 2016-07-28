@@ -1,7 +1,7 @@
 #!groovy
 
 def commit_id
-def mvnHome = tool 'M3'
+
     
 stage 'Build and Publish'
 node(){
@@ -18,7 +18,7 @@ node(){
 
     //ensureMaven()
     //sh 'mvn clean install'
-
+    def mvnHome = tool 'M3'
     sh "${mvnHome}/bin/mvn clean install"
 
     step $class: 'hudson.tasks.junit.JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'
@@ -75,6 +75,7 @@ parallel(qualityAnalysis:
 
     node()
     {
+    	def mvnHome = tool 'M3'
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
         ensureMaven()
@@ -88,6 +89,7 @@ performanceTest:
 
     node()
     {
+    	def mvnHome = tool 'M3'
         // DEPLOY ON PERFS AND RUN JMETER STRESS TEST
         echo "INFO - starting Perf Tests"
         //sleep 11
