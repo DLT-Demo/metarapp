@@ -207,7 +207,7 @@ node()
   //   sh "oc expose svc/metarapp-jboss-app --hostname=metarapp-jboss-app-prod.ose.dlt-demo.com"
 
      echo "Verify Application Deployed to: http://metarapp-prod.ose.dlt-demo.com/metars_map.html"
-   }
+   //}
   
     echo "Deployed to Prod"
 }
