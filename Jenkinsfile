@@ -1,7 +1,8 @@
 #!groovy
 
 def commit_id
-
+def mvnHome = tool 'M3'
+    
 stage 'Build and Publish'
 node(){
 
@@ -17,7 +18,7 @@ node(){
 
     //ensureMaven()
     //sh 'mvn clean install'
-    def mvnHome = tool 'M3'
+
     sh "${mvnHome}/bin/mvn clean install"
 
     step $class: 'hudson.tasks.junit.JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'
