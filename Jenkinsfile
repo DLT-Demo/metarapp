@@ -195,7 +195,7 @@ node()
 {
     echo "Deploying to Prod"
 
-    wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT_OC', insecure: true]) {
+    wrap([$class: 'OpenShiftBuildWrapper', url: 'https://master.ose.dlt-demo.com:8443', credentialsId: 'DLT-OC', insecure: true]) {
 
      sh "oc project prod"
      // Delete existing service:
