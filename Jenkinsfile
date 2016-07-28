@@ -75,12 +75,11 @@ parallel(qualityAnalysis:
 
     node()
     {
-    	def mvnHome = tool 'M3'
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
-        ensureMaven()
+        //ensureMaven()
         //sleep 10
-        sh '${mvnHome}/bin/mvn -o sonar:sonar'
+        sh 'mvn -o sonar:sonar'
         echo "INFO - Ending SONAR"
     }
 }, 
@@ -89,11 +88,10 @@ performanceTest:
 
     node()
     {
-    	def mvnHome = tool 'M3'
         // DEPLOY ON PERFS AND RUN JMETER STRESS TEST
         echo "INFO - starting Perf Tests"
         //sleep 11
-        sh '${mvnHome}/bin/mvn -o jmeter:jmeter'
+        sh 'mvn -o jmeter:jmeter'
         echo "INFO - Ending Perf Tests"
     }
 }
