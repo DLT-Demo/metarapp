@@ -78,8 +78,8 @@ parallel(qualityAnalysis:
         // RUN SONAR ANALYSIS
         echo "INFO - Starting SONAR"
         //ensureMaven()
-        //sleep 10
-        sh 'mvn -o sonar:sonar'
+        sleep 10
+        //sh 'mvn -o sonar:sonar'
         echo "INFO - Ending SONAR"
     }
 }, 
@@ -90,8 +90,8 @@ performanceTest:
     {
         // DEPLOY ON PERFS AND RUN JMETER STRESS TEST
         echo "INFO - starting Perf Tests"
-        //sleep 11
-        sh 'mvn -o jmeter:jmeter'
+        sleep 11
+        //sh 'mvn -o jmeter:jmeter'
         echo "INFO - Ending Perf Tests"
     }
 }
